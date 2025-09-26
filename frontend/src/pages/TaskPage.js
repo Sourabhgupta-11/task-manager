@@ -108,15 +108,14 @@ const TaskPage = () => {
           sortedTasks.map((task) => (
             <Col md={6} key={task._id} className="mb-3">
             <Card 
-            className={`mb-3 shadow-sm rounded-4 border-start border-4 border-${priorityColors[task.priority]}`}
-            style={{ overflow: "hidden", wordBreak: "break-word", backgroundColor: "#f8f9fa" }}
+            className={`mb-3 shadow-sm rounded-4 border-start border-4 border-${priorityColors[task.priority]} card-task-custom`}
             >
             <Card.Body>
                 <div className="d-flex justify-content-between align-items-start mb-2">
                 <h5 
                     className="fw-bold text-truncate" 
                     style={{ maxWidth: "70%" }}
-                    title={task.name} // shows full name on hover
+                    title={task.name}
                 >
                     {task.name}
                 </h5>
@@ -159,8 +158,6 @@ const TaskPage = () => {
                 </div>
             </Card.Body>
             </Card>
-
-
             </Col>
           ))
         )}

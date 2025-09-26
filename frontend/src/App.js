@@ -10,36 +10,39 @@ import TaskForm from "./components/TaskForm.js";
 import ProgressTracker from "./components/ProgressTracker.js";
 import Charts from "./components/Charts.js";
 import TaskPage from "./pages/TaskPage.js";
+import "./App.css"; 
 
 function Dashboard() {
   const { user, logout } = useContext(AuthContext);
   const { tasks, addTask } = useContext(TaskContext);
 
   return (
-    <Container className="my-4">
-      <Row className="mb-3">
-        <Col>
-          <h3>Welcome, {user.username}</h3>
-        </Col>
-        <Col className="text-end">
-          <Button variant="danger" onClick={logout}>Logout</Button>
-        </Col>
-      </Row>
-      <Row>
-        <Col md={4}>
-          <TaskForm addTask={addTask} />
-          <Link to="/tasks">
-            <Button className="mt-3 w-100" variant="primary">
-              Show Tasks
-            </Button>
-          </Link>
-        </Col>
-        <Col md={8}>
-          <ProgressTracker tasks={tasks} />
-          <Charts tasks={tasks} />
-        </Col>
-      </Row>
-    </Container>
+<Container className="container-custom">
+  {/* Navbar */}
+  <div className="navbar-custom mb-4">
+    <h3>Welcome, {user.username}</h3>
+    <Button variant="danger" onClick={logout}>Logout</Button>
+  </div>
+
+  <Row>
+    {/* Task Form */}
+    <Col md={4}>
+      <TaskForm addTask={addTask} />
+      <Link to="/tasks">
+        <Button className="mt-3 w-100" variant="primary">
+          Show Tasks
+        </Button>
+      </Link>
+    </Col>
+
+    {/* Progress and Charts */}
+    <Col md={8}>
+      <ProgressTracker tasks={tasks} />
+      <Charts tasks={tasks} />
+    </Col>
+  </Row>
+</Container>
+
   );
 }
 
