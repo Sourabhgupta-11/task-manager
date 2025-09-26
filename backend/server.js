@@ -6,7 +6,8 @@ const cors=require('cors')
 
 app.use(express.json())
 const allowedOrigins = [
-  'http://localhost:3000',                  
+  'http://localhost:3000',
+  'https://task-manager-eight-jade.vercel.app'                  
 ];
 
 app.use(cors({
