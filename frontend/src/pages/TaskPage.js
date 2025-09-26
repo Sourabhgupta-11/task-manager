@@ -28,6 +28,9 @@ const TaskPage = () => {
   const [category, setCategory] = useState("Work");
   const [deadline, setDeadline] = useState("");
 
+  const [priorityFilter, setPriorityFilter] = useState("");
+  const [categoryFilter, setCategoryFilter] = useState("");
+
   const toggleComplete = (task) => {
     updateTask({ ...task, completed: !task.completed });
   };
@@ -54,7 +57,13 @@ const TaskPage = () => {
     setShowModal(false);
   };
 
-  const sortedTasks = tasks.slice().sort((a, b) => new Date(a.deadline) - new Date(b.deadline));
+  const sortedTasks = tasks
+    .slice()
+    .filter((task) => 
+      (priorityFilter ? task.priority === priorityFilter : true) &&
+      (categoryFilter ? task.category === categoryFilter : true)
+    )
+    .sort((a, b) => new Date(a.deadline) - new Date(b.deadline));
 
   return (
     <Container className="mt-5">
@@ -65,59 +74,99 @@ const TaskPage = () => {
         </Link>
       </div>
 
+      <Row className="mb-3">
+        <Col md={6}>
+          <Form.Select
+            value={priorityFilter}
+            onChange={(e) => setPriorityFilter(e.target.value)}
+          >
+            <option value="">Filter by Priority</option>
+            <option value="Low">Low</option>
+            <option value="Medium">Medium</option>
+            <option value="High">High</option>
+          </Form.Select>
+        </Col>
+        <Col md={6}>
+          <Form.Select
+            value={categoryFilter}
+            onChange={(e) => setCategoryFilter(e.target.value)}
+          >
+            <option value="">Filter by Category</option>
+            <option value="Work">Work</option>
+            <option value="Personal">Personal</option>
+            <option value="Study">Study</option>
+            <option value="Urgent">Urgent</option>
+            <option value="General">General</option>
+          </Form.Select>
+        </Col>
+      </Row>
+
       <Row>
         {sortedTasks.length === 0 ? (
           <p className="text-center text-muted">No tasks found.</p>
         ) : (
           sortedTasks.map((task) => (
             <Col md={6} key={task._id} className="mb-3">
-              <Card className="shadow-sm border-0 rounded-3">
-                <Card.Body>
-                  <h5 className="fw-bold">{task.name}</h5>
+            <Card 
+            className={`mb-3 shadow-sm rounded-4 border-start border-4 border-${priorityColors[task.priority]}`}
+            style={{ overflow: "hidden", wordBreak: "break-word", backgroundColor: "#f8f9fa" }}
+            >
+            <Card.Body>
+                <div className="d-flex justify-content-between align-items-start mb-2">
+                <h5 
+                    className="fw-bold text-truncate" 
+                    style={{ maxWidth: "70%" }}
+                    title={task.name} // shows full name on hover
+                >
+                    {task.name}
+                </h5>
+                <div className="d-flex gap-1">
+                    <span className={`badge bg-${priorityColors[task.priority]} text-white`}>
+                    {task.priority}
+                    </span>
+                    <span className={`badge bg-${categoryColors[task.category]} text-white`}>
+                    {task.category}
+                    </span>
+                </div>
+                </div>
 
-                  <span className={`badge bg-${priorityColors[task.priority]} me-2`}>
-                    Priority: {task.priority}
-                  </span>
-                  <span className={`badge bg-${categoryColors[task.category]}`}>
-                    Category: {task.category}
-                  </span>
+                <p className="text-danger fw-semibold mb-3">
+                Deadline: {new Date(task.deadline).toLocaleDateString()}
+                </p>
 
-                  <p className="mt-2 text-danger fw-semibold">
-                    Deadline: {new Date(task.deadline).toLocaleDateString()}
-                  </p>
-
-                  <Button
+                <div className="d-flex flex-wrap gap-2">
+                <Button
                     variant={task.completed ? "success" : "outline-success"}
                     size="sm"
-                    className="me-2"
                     onClick={() => toggleComplete(task)}
-                  >
+                >
                     {task.completed ? "Completed" : "Mark Complete"}
-                  </Button>
-
-                  <Button
+                </Button>
+                <Button
                     variant="outline-primary"
                     size="sm"
-                    className="me-2"
                     onClick={() => handleShowModal(task)}
-                  >
+                >
                     Edit
-                  </Button>
-
-                  <Button
+                </Button>
+                <Button
                     variant="outline-danger"
                     size="sm"
                     onClick={() => deleteTask(task._id)}
-                  >
+                >
                     Delete
-                  </Button>
-                </Card.Body>
-              </Card>
+                </Button>
+                </div>
+            </Card.Body>
+            </Card>
+
+
             </Col>
           ))
         )}
       </Row>
 
+      {/* -------------------for edit Task Modal----------------------- */}
       <Modal show={showModal} onHide={handleCloseModal} centered>
         <Modal.Header closeButton>
           <Modal.Title>Edit Task</Modal.Title>
