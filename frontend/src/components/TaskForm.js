@@ -18,7 +18,7 @@ function TaskForm({ addTask }) {
     <Form onSubmit={handleSubmit}>
       <Form.Group className="mb-2">
         <Form.Label>Task Name</Form.Label>
-        <Form.Control value={name} onChange={(e) => setName(e.target.value)} required />
+        <Form.Control placeholder="Enter your task" value={name} onChange={(e) => setName(e.target.value)} required />
       </Form.Group>
       <Form.Group className="mb-2">
         <Form.Label>Category</Form.Label>
